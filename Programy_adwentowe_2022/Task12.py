@@ -1,3 +1,5 @@
+from collections import deque
+
 
 class Point: 
 
@@ -5,6 +7,7 @@ class Point:
         self.row = x
         self.column = y
         self.value = value 
+        self.explored = False
 
 
 class Map:
@@ -12,6 +15,7 @@ class Map:
     def __init__(self,data) -> None:
         self.board = []
         self.startingPoint = None
+        self.endingPoint = None
         self.getting_data(data)  
 
     def getting_data(self,data):
@@ -22,9 +26,12 @@ class Map:
             for j_letter,letter in enumerate(row):
                 # Creating Point 
                 point = Point(i_row,j_letter,letter)
-                # As im creating the points/board, Im looking for starting/ending point
+                # As im creating the board, Im looking for starting/ending point
                 if letter == 'S':
-                    self.startingPoint = Point()
+                    self.startingPoint = point
+                elif letter == 'E':
+                    self.endingPoint = point
+
                 # Creating a row
                 empty_row.append(point)
             
@@ -44,7 +51,31 @@ class Puzzle:
 
     def __init__(self,data) -> None:
         self.map = Map(data)
+
+    def searching_pointsToMove(self,curr_point):
+        # I neeed to find points next to my curr_point and below and above it, then I will decide whether
+        # I could move to that point
+        ableToMoveThere = []
+        x,y = curr_point.row,curr_point.column
+
+        above = self.map.board[]
+        
     
+    def alghorithm_for_win(self):
+        # I create a queue 
+        queue = deque()
+        
+        queue.append(self.map.startingPoint)
+        # Starting an algorithm
+        while len(queue) != 0:
+            # dequing a point from queue
+            current_point = queue.popleft()
+            
+            # Checking whether the point is the goal 
+            if current_point.value == 'E':
+                return current_point
+            
+
 
 
 
@@ -55,4 +86,4 @@ with open("Programy_adwentowe_2022\Test.txt") as f:
 
 map = Map(lines)
 
-map.printing()
+print(map.endingPoint.row)
