@@ -160,7 +160,7 @@ class CoordinateSystem:
 # Program
 
 
-with open("Zadanie9_Input.txt") as f:
+with open("Programy_adwentowe_2022\Zadanie9_Input.txt") as f:
     lines = f.readlines()
 
 cordinateSystem = CoordinateSystem()
