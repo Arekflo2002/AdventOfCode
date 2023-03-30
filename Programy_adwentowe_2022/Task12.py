@@ -8,6 +8,7 @@ class Point:
         self.column = y
         self.value = value 
         self.explored = False
+        self.parent = None
 
 
 class Map:
@@ -58,9 +59,35 @@ class Puzzle:
         ableToMoveThere = []
         x,y = curr_point.row,curr_point.column
 
-        above = self.map.board[]
+        if curr_point.value == 'S':
+            curr_point.value = 'a'
+        # Getting the points and checking that they arent beyond the lengths of the board
+        if y-1 >= 0:
+            ableToMoveThere.append(self.map.board[x][y-1])
         
-    
+        if y+1 < len(self.map.board[x]):
+            ableToMoveThere.append(self.map.board[x][y+1])
+
+        if x-1 >= 0:
+            ableToMoveThere.append(self.map.board[x-1][y])
+        
+        if x +1 < len(self.map.board[x]):
+            ableToMoveThere.append(self.map.board[x+1][y])
+        
+        # I have Points where i Can technically move, but i dont know if I am able to, so i need to check that
+        ableToMoveThereForSure = []
+        for point in ableToMoveThere:
+            if ord(point.value) == ord(curr_point.value) + 1:
+                ableToMoveThereForSure.append(point)
+            
+            elif curr_point.value == 'z' and point.value == 'E':
+                ableToMoveThereForSure.append(point)
+
+
+
+        return ableToMoveThereForSure
+
+
     def alghorithm_for_win(self):
         # I create a queue 
         queue = deque()
@@ -70,13 +97,22 @@ class Puzzle:
         while len(queue) != 0:
             # dequing a point from queue
             current_point = queue.popleft()
+            print(current_point.value)
             
             # Checking whether the point is the goal 
             if current_point.value == 'E':
                 return current_point
             
+            # This is the points that i CAN and I AM AbLE TO move 
+            pointsToMove = self.searching_pointsToMove(current_point)
 
-
+            # So Im adding new points based on either they are explored or not
+            for point in pointsToMove:
+                if not point.explored:
+                    point.explored = True
+                    point.parent = current_point
+                    queue.append(point)
+        
 
 
 
@@ -84,6 +120,7 @@ class Puzzle:
 with open("Programy_adwentowe_2022\Test.txt") as f:
     lines = f.readlines()
 
-map = Map(lines)
+puzzle = Puzzle(lines)
+win = puzzle.alghorithm_for_win()
 
-print(map.endingPoint.row)
+print(win.row)
