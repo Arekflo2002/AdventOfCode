@@ -95,6 +95,8 @@ class Puzzle:
         while len(queue) != 0:
             # dequing a point from queue
             current_point = queue.popleft()
+            print(current_point.row,current_point.column,current_point.value)
+
             # Checking whether the point is the goal 
             if current_point.value == 'E':
                 return current_point
@@ -107,7 +109,7 @@ class Puzzle:
                     point.explored = True
                     point.parent = current_point
                     queue.append(point)
-        
+
         return current_point
 
 
@@ -118,7 +120,6 @@ class Puzzle:
         current_point = goal_point
         steps = 1
         while current_point.value != self.map.startingPoint.value:
-            print(current_point.row,current_point.column,current_point.value)
             current_point = current_point.parent
             steps += 1
 
@@ -136,3 +137,4 @@ with open("Programy_adwentowe_2022\Zadanie12_Input.txt") as f:
 puzzle = Puzzle(lines)
 
 print(puzzle.counting_steps())  
+
