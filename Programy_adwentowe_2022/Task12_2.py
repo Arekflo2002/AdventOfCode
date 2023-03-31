@@ -133,7 +133,7 @@ class Puzzle:
         # Till I dont go back into my starting position 
         current_point = goal_point
         steps = 2
-        while current_point.value != self.map.startingPoint.value:
+        while current_point.value != 'a':
             current_point = current_point.parent
             steps += 1
 
