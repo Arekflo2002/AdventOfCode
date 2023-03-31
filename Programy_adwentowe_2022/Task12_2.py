@@ -6,6 +6,9 @@ from collections import deque
 # I checked and it wasnt told or I have bad input. So my program stopped at r bcs it couldnt find a way further, bcs there was no way futher, as
 # I thought would be. So now i will fix it but i had a desire to complain here a little. 
 
+
+# Generally I just inverse the method from the original task and thats it 
+
 class Point: 
 
     def __init__(self,x,y,value) -> None:
@@ -17,6 +20,10 @@ class Point:
 
     def __str__(self):
         return self.value + str(self.row)+ " " + str(self.column)
+    
+    def __eq__(self,other):
+        return self.row == other.row and self.column == other.column
+
 
 
 class Map:
@@ -71,8 +78,6 @@ class Puzzle:
         ableToMoveThere = []
         x,y = curr_point.row,curr_point.column
 
-        if curr_point.value == 'S':
-            curr_point.value = 'a'
         # Getting the points and checking that they arent beyond the lengths of the board
         if y-1 >= 0:
             ableToMoveThere.append(self.map.board[x][y-1])
@@ -91,11 +96,9 @@ class Puzzle:
         for point in ableToMoveThere:
             # Here is the fix ! 
             if point.value != '\n':
-                if ord(point.value) == 1 + ord(curr_point.value) or ord(point.value) <= ord(curr_point.value):
+                if ord(point.value) == ord(curr_point.value) - 1 or ord(point.value) >= ord(curr_point.value):
                     ableToMoveThereForSure.append(point)
-                
-            elif curr_point.value == 'z' and point.value == 'E':
-                ableToMoveThereForSure.append(point)
+      
 
 
 
@@ -105,14 +108,16 @@ class Puzzle:
         # So this is The Breadth-first search algorith and his usage 
         # I create a queue 
         queue = deque()
+
+        self.map.endingPoint.value = 'z'
         
-        queue.append(self.map.startingPoint)
+        queue.append(self.map.endingPoint)
         # Starting an algorithm
         while len(queue) != 0:
             # dequing a point from queue
             current_point = queue.popleft()
             # Checking whether the point is the goal 
-            if current_point.value == 'E':
+            if current_point.value == 'a':
                 return current_point
             # This is the points that i CAN and I AM AbLE TO move 
             pointsToMove = self.searching_pointsToMove(current_point)
@@ -130,8 +135,9 @@ class Puzzle:
         # So I have my goal that have a parent and so on ... so now i Will count steps and go backwords
         # Till I dont go back into my starting position 
         current_point = goal_point
+        print(current_point)
         steps = 2
-        while current_point.value != self.map.startingPoint.value:
+        while current_point != self.map.endingPoint:
             current_point = current_point.parent
             steps += 1
 
@@ -140,10 +146,10 @@ class Puzzle:
     def gathering_startingPoints(self):
         startingPoints = []
         for row in self.map.board:
-            for letter in row:
-                if letter.value == 'a':
-                    startingPoints.append(letter)
-
+            for point in row:
+                if point.value == 'a':
+                    startingPoints.append(point)
+        
         return startingPoints
 
     def second_partOfPuzzle(self):
@@ -157,6 +163,7 @@ class Puzzle:
         results = []
 
         for startpoint in startingPoints:
+            # print(startpoint)
             self.map.startingPoint = startpoint
             results.append(self.counting_steps())
         
@@ -170,5 +177,4 @@ with open("Programy_adwentowe_2022\Zadanie12_Input.txt") as f:
 
 puzzle = Puzzle(lines)
 
-puzzle.second_partOfPuzzle()
-
+print(puzzle.counting_steps())
