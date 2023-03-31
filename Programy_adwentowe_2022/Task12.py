@@ -71,19 +71,17 @@ class Puzzle:
         if x-1 >= 0:
             ableToMoveThere.append(self.map.board[x-1][y])
         
-        if x +1 < len(self.map.board[x]):
+        if x +1 < len(self.map.board):
             ableToMoveThere.append(self.map.board[x+1][y])
-        
+
         # I have Points where i Can technically move, but i dont know if I am able to, so i need to check that
         ableToMoveThereForSure = []
         for point in ableToMoveThere:
-            if ord(point.value) == ord(curr_point.value) + 1:
+            if ord(point.value) == 1 + ord(curr_point.value) or ord(point.value) == ord(curr_point.value):
                 ableToMoveThereForSure.append(point)
             
             elif curr_point.value == 'z' and point.value == 'E':
                 ableToMoveThereForSure.append(point)
-
-
 
         return ableToMoveThereForSure
 
@@ -97,15 +95,12 @@ class Puzzle:
         while len(queue) != 0:
             # dequing a point from queue
             current_point = queue.popleft()
-            print(current_point.value)
-            
             # Checking whether the point is the goal 
             if current_point.value == 'E':
                 return current_point
-            
             # This is the points that i CAN and I AM AbLE TO move 
             pointsToMove = self.searching_pointsToMove(current_point)
-
+            
             # So Im adding new points based on either they are explored or not
             for point in pointsToMove:
                 if not point.explored:
@@ -113,14 +108,31 @@ class Puzzle:
                     point.parent = current_point
                     queue.append(point)
         
+        return current_point
+
+
+    def counting_steps(self):
+        goal_point = self.alghorithm_for_win()
+        # So I have my goal that have a parent and so on ... so now i Will count steps and go backwords
+        # Till I dont go back into my starting position 
+        current_point = goal_point
+        steps = 1
+        while current_point.value != self.map.startingPoint.value:
+            print(current_point.row,current_point.column,current_point.value)
+            current_point = current_point.parent
+            steps += 1
+
+        return steps 
+        
+
+            
 
 
 
 
-with open("Programy_adwentowe_2022\Test.txt") as f:
+with open("Programy_adwentowe_2022\Zadanie12_Input.txt") as f:
     lines = f.readlines()
 
 puzzle = Puzzle(lines)
-win = puzzle.alghorithm_for_win()
 
-print(win.row)
+print(puzzle.counting_steps())  
