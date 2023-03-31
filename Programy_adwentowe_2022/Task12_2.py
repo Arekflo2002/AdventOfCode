@@ -65,6 +65,7 @@ class Puzzle:
         self.map = Map(data)
 
     def searching_pointsToMove(self,curr_point):
+
         # I neeed to find points next to my curr_point and below and above it, then I will decide whether
         # I could move to that point
         ableToMoveThere = []
@@ -100,7 +101,6 @@ class Puzzle:
 
         return ableToMoveThereForSure
 
-
     def alghorithm_for_win(self):
         # So this is The Breadth-first search algorith and his usage 
         # I create a queue 
@@ -124,8 +124,6 @@ class Puzzle:
                     point.parent = current_point
                     queue.append(point)
 
-        return current_point
-
 
     def counting_steps(self):
         goal_point = self.alghorithm_for_win()
@@ -133,12 +131,36 @@ class Puzzle:
         # Till I dont go back into my starting position 
         current_point = goal_point
         steps = 2
-        while current_point.value != 'a':
+        while current_point.value != self.map.startingPoint.value:
             current_point = current_point.parent
             steps += 1
 
         return steps 
+    
+    def gathering_startingPoints(self):
+        startingPoints = []
+        for row in self.map.board:
+            for letter in row:
+                if letter.value == 'a':
+                    startingPoints.append(letter)
+
+        return startingPoints
+
+    def second_partOfPuzzle(self):
+        # I need to go gather all points that potentially can be a starting point, means that they have value == 'a'
+        startingPoints = self.gathering_startingPoints()
+        # Now i need to add the existing starting point and its dont
+        self.map.startingPoint.value = 'a'
+        startingPoints.append(self.map.startingPoint)
+
+        # Now i need to collect the results 
+        results = []
+
+        for startpoint in startingPoints:
+            self.map.startingPoint = startpoint
+            results.append(self.counting_steps())
         
+        print(results)
 
             
 
@@ -148,5 +170,5 @@ with open("Programy_adwentowe_2022\Zadanie12_Input.txt") as f:
 
 puzzle = Puzzle(lines)
 
-print(puzzle.counting_steps())
+puzzle.second_partOfPuzzle()
 
